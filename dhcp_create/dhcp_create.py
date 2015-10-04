@@ -3,10 +3,26 @@ import csv
 DHCPSERVER = "127.0.0.1"
 
 data = []
+cmds = []
+
+
+
 
 #
 # DEF
 #
+
+def build_add_scope(scope):
+
+  # netsh dhcp server \\[server] 
+  # add scope ScopeAddress SubnetMask ScopeName[ScopeComment]
+
+  cmds = ('add scope ' + scope['subnet'] + ' ' + scope['netmask'] + ' ' + scope['descr'])
+  return cmds
+
+def build_netsh_dhcp():
+  return('netsh dhcp server ' + DHCPSERVER + ' ')
+
 
 def read(filename):
 
@@ -26,8 +42,9 @@ def read(filename):
     return data
 
 def output_dhcp_create_cmd(scopes):
-	for scope in scopes:
-		print(scope['subnet'])
+  for scope in scopes:
+    print(build_netsh_dhcp() + build_add_scope(scope))
+    
 
 # 
 # MAIN
@@ -35,3 +52,12 @@ def output_dhcp_create_cmd(scopes):
 
 scopes = read('scopes.txt')
 output_dhcp_create_cmd(scopes)
+
+
+#
+# netsh
+#
+"""
+add scope ScopeAddress SubnetMask ScopeName[ScopeComment]
+
+"""
